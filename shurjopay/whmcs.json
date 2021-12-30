@@ -1,0 +1,30 @@
+{
+  "schema": "1.0",
+  "type": "whmcs-gateways",
+  "name": "shurjoPay",
+  "license": "proprietary",
+  "category": "payments",
+  "description": {
+    "name": "shurjoPay",
+    "tagline": "Accept payments online supporting a wide range of industries.",
+    "long": "shurjoPay's payment gateway provides all type of card and mfs payment acquisition of local as well as international debit and credit cards.\n\n[Click to learn more and signup](https:\/\/shurjopay.com.bd)",
+    "features": [
+      "Accept all major debit/credit cards as well as MFS in Bangladesh",
+      "Quick and easy integration",
+      "Highest security standards"
+    ]
+  },
+  "logo": {
+    "filename": "logo.png"
+  },
+  "support": {
+    "homepage": "https:\/\/shurjopay.com.bd",
+    "docs_url": "https:\/\/github.com\/smukhidev\/whmc-7.x"
+  },
+  "authors": [
+    {
+      "name": "WHMCS",
+      "homepage": "https:\/\/www.whmcs.com\/"
+    }
+  ]
+}
