@@ -97,13 +97,6 @@
 				'Description' => 'Enter your unique id prefix here',
 			),
 
-			'returnUrl' => array(
-				'FriendlyName' => 'Merchant Return/Callback Url',
-				'Type' => 'text',
-				'Size' => '25',
-				'Default' => '',
-				'Description' => 'Enter your Return/Callback Url here',
-			),
 			'merchantIP' => array(
 				'FriendlyName' => 'Merchant IP',
 				'Type' => 'text',
@@ -141,42 +134,33 @@
 		// Gateway Configuration Parameters
 		$merchantName = $params['merchantName'];
 		$merchantPassword = $params['merchantPassword'];
-		$isSandbox = $params['testMode'];    
-		$uniqeID = $params['uniqeID'];
-		$returnUrl = $params['returnUrl'];
-		$merchantIP = get_client_ip();
+		$isSandbox    = $params['testMode'];    
+		$uniqeID      = $params['uniqeID'];
+		$returnUrl    = $params['returnUrl'];
+		$merchantIP   = get_client_ip();
 		
 		 // System Parameters
-		$companyName = $params['companyname'];
-		$systemUrl = $params['systemurl'];
-		$returnUrl = $params['returnurl'];
-		$langPayNow = $params['langpaynow'];
+		$companyName  = $params['companyname'];
+		$systemUrl    = $params['systemurl'];
+		$returnUrl    = $params['returnurl'];
+		$langPayNow   = $params['langpaynow'];
 		$moduleDisplayName = $params['name'];
-		$moduleName = $params['paymentmethod'];
+		$moduleName   = $params['paymentmethod'];
 		$whmcsVersion = $params['whmcsVersion'];
 		
 
 		// Invoice Parameters
-		$invoiceId = $params['invoiceid'];
-		$description = $params["description"];
-		$amount = $params['amount'];
+		$invoiceId    = $params['invoiceid'];
+		$description  = $params["description"];
+		$amount 		  = $params['amount'];
 		$currencyCode = $params['currency'];
-		$returnUrl          = $systemUrl . 'viewinvoice.php?id=' . $invoiceId;
+		$returnUrl    = $systemUrl . 'viewinvoice.php?id=' . $invoiceId;
 		$callback_url = $systemUrl . 'modules/gateways/callback/' . $moduleName . '.php';
 		$postfields['return_url'] = $returnUrl;
 
 
 		$uniq_transaction_key=$uniqeID.time().'_'.$invoiceId;
 		
-		// check if pay now button pressed				
-		// if( isset($_POST['order_id']) && !empty($_POST['order_id']) )
-		// {
-			// curl_request_post($isLive, $form_data);
-			// exit("hello!");
-		// }
-
-
-
 		// Get token
 		$token_raw_data = get_sp_token($isSandbox,$merchantName,$merchantPassword);
 		$token_data = json_decode($token_raw_data);
@@ -209,13 +193,10 @@
 		// Redirect to gateway
 		$response = send_payment($isSandbox,$token_data->token,$requestbodyJson);
 		$response_decoted = json_decode($response);
-		if(isset($response_decoted->checkout_url) && !empty($response_decoted->checkout_url))
-		{
+		if(isset($response_decoted->checkout_url) && !empty($response_decoted->checkout_url)) {
 				header("Location: {$response_decoted->checkout_url}");
 				exit;
-		}
-		else
-		{
+		} else {
 			 $errror = "Checkout url not found!";
 	     logTransaction($GATEWAY["name"], $errror, "Unsuccessful");
 		}
@@ -223,9 +204,8 @@
 	}
 
 	/*
-	*
-	*
-	*
+	*	 Get ip of client 
+	*	 @return string IP address
 	*/
 
 	function get_client_ip()
@@ -249,9 +229,9 @@
 	}
 
 	/*
-	*
-	*
-	*
+	* Get token
+	* @ Request params bolean,credentials string
+	* @ Return  token json string
 	*/
 
 	function get_sp_token($isSandbox,$username,$password)
@@ -259,27 +239,24 @@
   		
   		$curl = curl_init();
 
-  		if( $isSandbox == "on")
-			{
+  		if( $isSandbox == "on") {
 				$server_url = 'https://sandbox.shurjopayment.com';				
 
-			}
-			else
-			{
+			} else {
 				$server_url = 'https://engine.shurjopayment.com';				
 			}
 
   		$request_credential = array(
-              'username' => $username,
-              'password' => $password
-          );
+        'username' => $username,
+        'password' => $password
+      );
   		$requestbodyJson = json_encode($request_credential);
   		curl_setopt_array($curl, [
   		  CURLOPT_URL => $server_url.'/api/get_token',
   		  CURLOPT_RETURNTRANSFER => true,
   		  CURLOPT_ENCODING => "",
-  		  //CURLOPT_MAXREDIRS => 10,
-  		  //CURLOPT_TIMEOUT => 30,
+  		  CURLOPT_MAXREDIRS => 10,
+  		  CURLOPT_TIMEOUT => 30,
   		  CURLOPT_CUSTOMREQUEST => "POST",
   		  CURLOPT_POSTFIELDS => $requestbodyJson,
   		  CURLOPT_HTTPHEADER => [
@@ -295,42 +272,44 @@
   		  return $response;
   		}
   }
+  
+  /*
+  * Redirect to gateway
+  * @ Request params bolean, credentials string
+  * @ Response json
+  */
 
   function send_payment($isSandbox,$token,$requestbodyJson) 
 	{
 
 
-    if(empty($requestbodyJson))
-    {
+    if(empty($requestbodyJson)) {
         return false;
     }
 
-    if($isSandbox == 'on')
-		{
+    if($isSandbox == 'on') {
 			$server_url = 'https://sandbox.shurjopayment.com';				
 
-		}
-		else
-		{
+		} else {
 			$server_url = 'https://engine.shurjopayment.com';				
 		}
 
     $curl  = curl_init();
     $array = json_decode($token, true);
      curl_setopt_array($curl, [
-      CURLOPT_URL => $server_url."/api/secret-pay",
-      CURLOPT_RETURNTRANSFER => true,
-      // CURLOPT_SSL_VERIFYPEER => true,
-      // CURLOPT_SSL_VERIFYHOST => true,
-      CURLOPT_ENCODING => "",
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 30,
-      // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => "POST",
-      CURLOPT_POSTFIELDS => $requestbodyJson,
-      CURLOPT_HTTPHEADER => [
-        "Content-Type: Application/json",
-        "Authorization: Bearer ". $token
+	      CURLOPT_URL => $server_url."/api/secret-pay",
+	      CURLOPT_RETURNTRANSFER => true,
+	      CURLOPT_SSL_VERIFYPEER => true,
+	      CURLOPT_SSL_VERIFYHOST => true,
+	      CURLOPT_ENCODING => "",
+	      CURLOPT_MAXREDIRS => 10,
+	      CURLOPT_TIMEOUT => 30,
+	      // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+	      CURLOPT_CUSTOMREQUEST => "POST",
+	      CURLOPT_POSTFIELDS => $requestbodyJson,
+	      CURLOPT_HTTPHEADER => [
+	        "Content-Type: Application/json",
+	        "Authorization: Bearer ". $token
       ],
     ]);
     $response = curl_exec($curl);
@@ -344,21 +323,22 @@
       }
 	}
 
+	/*
+	*	Payment verification call
+	*	@ Request params bolean, order id string
+	* @ Response json array
+	*/
 
   function verify_payment($isSandbox,$orderid)
 	{
   
-    if(empty($orderid))
-    {
+    if(empty($orderid)) {
       return false;
     } 
 
-    if($isSandbox == 'on')
-		{
+    if($isSandbox == 'on') {
 			$server_url = 'https://sandbox.shurjopayment.com';	
-		}
-		else
-		{
+		}	else {
 			$server_url = 'https://engine.shurjopayment.com';				
 		}
 
@@ -389,7 +369,4 @@
     }
 	}
 
-	function webhook()
-	{
 
-	}
