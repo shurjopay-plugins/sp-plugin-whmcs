@@ -194,8 +194,18 @@
 		$response = send_payment($isSandbox,$token_data->token,$requestbodyJson);
 		$response_decoted = json_decode($response);
 		if(isset($response_decoted->checkout_url) && !empty($response_decoted->checkout_url)) {
-				header("Location: {$response_decoted->checkout_url}");
-				exit;
+			//header("Location: {$response_decoted->checkout_url}");
+			//exit;
+			// Generate payment URL
+			$val   = parse_url($response_decoted->checkout_url);
+			$host  = $val['schema'].'//'.$val['host'].$val['path'];
+			$code .='<form method="GET" action="'.$host.'">';
+			$code .= '<input type="hidden" name="order_id" value="'.$response_decoted->sp_order_id.'" >';
+			$code .= '<input type="hidden" name="token"  value="'.$token_data->token.'" >';
+			$code .='<input type="submit" value="Pay Now" />';
+			$code .='</form>';
+			return $code;	
+		
 		} else {
 			 $errror = "Checkout url not found!";
 	     logTransaction($GATEWAY["name"], $errror, "Unsuccessful");
