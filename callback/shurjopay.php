@@ -103,7 +103,7 @@
 
   		$request_credential = array (
 	        'username' => $username,
-            'password' => $password
+            'password' => html_entity_decode($password)
         );
 
   		$requestbodyJson = json_encode($request_credential);
