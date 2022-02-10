@@ -170,7 +170,7 @@
         'token' => $token_data->token,
         'store_id' => $token_data->store_id, 
         'prefix' => $uniqeID,                              
-        'currency' => 'BDT',//$params['currency'],
+        'currency' => $params['currency'],
         'return_url' => $callback_url,
         'cancel_url' => $callback_url,
         'amount' => $amount,                
