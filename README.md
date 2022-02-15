@@ -1,6 +1,6 @@
 
 ### WHMC shurjoPay(V2) plugin ###
-	This repository is for WHMC shurjoPay plugin for version 7.x.x
+	This repository is for WHMC shurjoPay plugin
 	
 ### How do I get set up? ###
 	Upload files to respective fol	der. like modules/..
