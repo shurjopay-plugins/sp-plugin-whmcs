@@ -51,7 +51,8 @@
 		$orderData = mysql_fetch_assoc(select_query('tblinvoices', 'total', array("id" => $invoiceid)));
 		$order_amount = $orderData['total'];
 
-		if( $verified_data->sp_code	 == '1000' && ($order_amount == $txnAmount)) {
+		//if( $verified_data->sp_code	 == '1000' && ($order_amount == $txnAmount)) {
+		if( $verified_data->sp_code	 == '1000' ) {
 			$status = 'success';
 		} else {
 			$status = 'failed';
