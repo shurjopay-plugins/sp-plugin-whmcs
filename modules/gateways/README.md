@@ -3,7 +3,7 @@
 	This repository is for WHMC shurjoPay plugin
 	
 ### How do I get set up? ###
-	Upload files to respective fol	der. like modules/..
+	Copy the modules folder from the archive to your base whmcs folder (using FTP program or similar)
 	## Step 1: ##
 		Go to Addons -> Apps & Integrations
 		Browse -> Payments
