@@ -1,7 +1,7 @@
 {
   "schema": "1.0",
   "type": "whmcs-gateways",
-  "name": "shurjoPay",
+  "name": "shurjopay",
   "license": "proprietary",
   "category": "payments",
   "description": {
@@ -23,8 +23,8 @@
   },
   "authors": [
     {
-      "name": "WHMCS",
-      "homepage": "https:\/\/www.whmcs.com\/"
+      "name": "shurjoPay",
+      "homepage": "https://shurjopay.com.bd/"
     }
   ]
 }
